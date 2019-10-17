@@ -1,0 +1,55 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: finance-service
+  cache-period: 10000
+
+ribbon:
+  ReadTimeout: 60000
+  ConnectTimeout: 60000
+
+
+
+asad:
+  eh-cache:
+    maxEntriesLocalHeap: 1000
+    expiryIntervalInSeconds: 10
+    cacheName: currency-live
+  currency:
+    conversion:
+      conversionRate:
+        USD: 1
+        AED: 1.1
+        EUR: 1.22
+        GBP: 1.02
+        CHF: 1.07
+        INR: 71
+
+feign:
+  hystrix:
+    enabled: true
+  client:
+    config:
+      default:
+        loggerLevel: full
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            connectTimeout: 5000
+            readTimeout: 5000
+            timeoutInMilliseconds: 10000
+    vat-client:
+      execution:
+        isolation:
+          thread:
+            requestInterceptors: org.asad.finance.config.VatClientInterceptor
+
+logging.level.org.asad.finance.client: DEBUG
+
+vat-client.ribbon.listOfServers: https://api.cloudmersive.com
+currency-client.ribbon.listOfServers: http://www.apilayer.net/api
